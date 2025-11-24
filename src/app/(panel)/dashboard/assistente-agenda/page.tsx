@@ -72,7 +72,7 @@ export default function AssistenteAgendaPage() {
       <div className="w-full max-w-xl bg-white rounded-xl shadow-sm border p-4 flex flex-col gap-4">
         <header className="flex flex-col gap-1">
           <h1 className="text-xl font-semibold">
-            Assistente de Agenda – NailsPro
+            Assistente de Agenda
           </h1>
           <p className="text-sm text-slate-600">
             Fale com o assistente para marcar, reagendar ou cancelar horários.
@@ -82,7 +82,7 @@ export default function AssistenteAgendaPage() {
         <div className="border rounded-md p-3 h-80 overflow-y-auto bg-slate-50">
           {messages.length === 0 && (
             <p className="text-sm text-slate-500">
-              Olá! 👋 Sou o assistente de agenda do salão. Como posso ajudar
+              Olá! 👋 Sou Bia assistente de agenda do Fino Detalhe Studio. Como posso ajudar
               hoje?
             </p>
           )}

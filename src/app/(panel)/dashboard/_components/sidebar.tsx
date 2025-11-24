@@ -16,6 +16,7 @@ import { Banknote, CalendarCheck2, ChevronLeft, ChevronRight, Folder, List, Sett
 import Link from "next/link";
 import Image, { type StaticImageData } from "next/image";
 import logoimage from "@/../public/logo-odonto.png"
+import image6 from "@/../public/image6.jpeg";
 import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
 
 type Clinica = {
@@ -43,8 +44,8 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
         <div className="mb-6 mt-4">
           {!isCollapsed && (
             <Image
-              src={logoimage}
-              alt="Logo do OdontPRO"
+              src={image6}
+              alt="Logo do NailsPRO"
               priority
               quality={100}
               style={{
@@ -166,7 +167,7 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
             </div>
 
             <SheetContent side="right" className="sm:max-w-xs text-black px-4">
-              <SheetTitle>OdontoPRO</SheetTitle>
+              <SheetTitle>NailsPRO</SheetTitle>
               <SheetDescription>
                 Menu Administrativo
               </SheetDescription>

@@ -99,6 +99,11 @@ model Subscription {
   user   User   @relation(fields: [userId], references: [id])
 }
 
+enum UserRole {
+  CLIENT
+  ADMIN
+}
+
 model User {
   id                 String    @id @default(cuid())
   name               String?
@@ -111,6 +116,8 @@ model User {
   timeZone           String?
   stripe_customer_id String?
   times              String[]  @default([])
+
+  role UserRole @default(CLIENT)
 
   subscription Subscription?
   services     Service[]

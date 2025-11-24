@@ -8,6 +8,8 @@ import fotoImg2 from "@/../public/image2.jpg";
 import fotoImg3 from "@/../public/image3.jpg";
 import fotoImg4 from "@/../public/image4.jpg";
 import fotoImg5 from "@/../public/image5.jpeg";
+import imageCombo from "@/../public/imagecombo.jpeg";
+import imageSimples from "@/../public/imagesimples.jpeg";
 
 
 type Clinica = {
@@ -22,30 +24,30 @@ const CLINICAS: Clinica[] = [
   {
     id: "123",
     nome: "Aplicação do alongamento",
-    href: "/clinica/123",
+    href: "/dashboard/assistente-agenda",
     ativa: true,
     imagem: fotoImg2,
   },
   {
     id: "124",
     nome: "Banho de gel",
-    href: "/clinica/124",
+    href: "/dashboard/assistente-agenda",
     ativa: true,
     imagem: fotoImg5,
   },
   {
     id: "125",
     nome: "Manicure simples",
-    href: "/clinica/125",
+    href: "/dashboard/assistente-agenda",
     ativa: true,
-    imagem: fotoImg3,
+    imagem: imageSimples,
   },
   {
     id: "126",
     nome: "Combo mãos e pés",
-    href: "/clinica/126",
+    href: "/dashboard/assistente-agenda",
     ativa: true,
-    imagem: fotoImg1,
+    imagem: imageCombo,
   },
 ];
 

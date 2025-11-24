@@ -21,7 +21,7 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { href: "#profissionais", label: "Profissionais" },
+    { href: "#sucesso", label: "Sucesso" },
   ]
 
   async function handleLogin() {
@@ -55,7 +55,7 @@ export function Header() {
       ) : (
         <Button onClick={handleLogin}>
           <LogIn />
-          Portal da clinica
+          Portal Nails
         </Button>
       )}
     </>
@@ -72,7 +72,7 @@ export function Header() {
           href="/"
           className="text-2xl font-bold text-zinc-900"
         >
-          FinoDetalhe<span className="text-[#bb5b6a]"><b></b>Studio</span>
+          FinoDetalhe<span className="text-[#bb5b6a] ml-2">Studio</span>
         </Link>
 
         <nav className="hidden md:flex items-center space-x-4">

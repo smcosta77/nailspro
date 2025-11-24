@@ -1,6 +1,7 @@
 // src/app/(panel)/dashboard/page.tsx
 import getSession from "@/lib/getSesstion";
 import { redirect } from "next/navigation";
+import AssistenteAgendaPage from "./assistente-agenda/page";
 
 export default async function Dashboard() {
   const session = await getSession();
@@ -11,7 +12,7 @@ export default async function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <h1>Página Dashboard....</h1>
+      <AssistenteAgendaPage />
     </div>
   );
 }

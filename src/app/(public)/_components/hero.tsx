@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import doctorimage from "@/../public/doctor-hero.png";
 import fotoImg4 from "@/../public/image4.jpg";
-import novaImage from "@/../public/nova_image.jpeg"
+import imageTop from "@/../public/imagetop.jpeg"
 
 
 export function Hero() {
@@ -16,7 +16,7 @@ export function Hero() {
               Elegância em cada detalhe!
             </h1>
             <p className="text-base md:text-lg text-gray-500">
-              Nós somos uma plataforma para profissionais da saúde com foco em agilizar seu atendimento de forma simplicada e organizada.
+              Cuidando das suas unhas com carinho e técnica. Um momento de autocuidado para mulheres e homens.
             </p>
 
             <Button className="bg-[#bb5b6a] hover:bg-[#a14f5a] w-fit px-6 font-semibold">
@@ -27,7 +27,7 @@ export function Hero() {
           <div className="hidden lg:block">
             <div className="w-[260px] h-[260px] rounded-full overflow-hidden bg-[#FBEFF3] mx-auto">
               <Image
-                src={fotoImg4}
+                src={imageTop}
                 alt="Foto ilustrativa profissional"
                 width={260}
                 height={260}
