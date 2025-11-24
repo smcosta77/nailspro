@@ -47,9 +47,9 @@ export function Header() {
       ) : session ? (
         <Link
           href="/dashboard"
-          className='flex items-center justify-center gap-2 bg-zinc-900 text-white py-1 rounded-md px-4'
+          className='flex items-center justify-center gap-2 bg-[#702e35] hover:bg-[#bb5b6a] text-white py-1 rounded-md px-4'
         >
-          Acessar clinica
+          Login
         </Link>
       ) : (
         <Button onClick={handleLogin}>

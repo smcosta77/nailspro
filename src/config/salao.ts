@@ -8,12 +8,13 @@ export const HORARIO_FUNCIONAMENTO = {
 };
 
 export const SERVICOS = [
-    { codigo: "manicure_simples", nome: "Manicure simples", duracaoMin: 40 },
-    { codigo: "pedicure_simples", nome: "Pedicure simples", duracaoMin: 40 },
-    { codigo: "combo_maos_pes", nome: "Combo mãos + pés", duracaoMin: 80 },
-    { codigo: "gel_na_tips", nome: "Gel na tips", duracaoMin: 90 },
-    { codigo: "manutencao_gel", nome: "Manutenção de gel", duracaoMin: 70 },
-    { codigo: "spa_das_maos", nome: "Spa das mãos", duracaoMin: 60 },
+    { codigo: "manicure_simples", nome: "Manicure simples", duracaoMin: 40, preco: 30 },
+    { codigo: "pedicure_simples", nome: "Pedicure simples", duracaoMin: 40, preco: 35 },
+    { codigo: "combo_maos_pes", nome: "Combo mãos + pés", duracaoMin: 80, preco: 60 },
+    { codigo: "alongamento_em_fibra", nome: "Aplicação do alongamento", duracaoMin: 120, preco: 150 },
+    { codigo: "manutencao_alongamento", nome: "Manutenção alongamento", duracaoMin: 90, preco: 110 },
+    { codigo: "banho_de_gel", nome: "Banho de gel", duracaoMin: 60, preco: 90 },
+    { codigo: "blindagem", nome: "Blindagem", duracaoMin: 60, preco: 70 },
 ];
 
 export const PROFISSIONAIS = [

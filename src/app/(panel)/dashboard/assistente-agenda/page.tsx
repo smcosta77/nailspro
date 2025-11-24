@@ -68,7 +68,7 @@ export default function AssistenteAgendaPage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center bg-slate-50 py-8 px-4">
+    <main className="min-h-screen flex flex-col items-center bg-background py-8 px-4">
       <div className="w-full max-w-xl bg-white rounded-xl shadow-sm border p-4 flex flex-col gap-4">
         <header className="flex flex-col gap-1">
           <h1 className="text-xl font-semibold">
@@ -95,8 +95,8 @@ export default function AssistenteAgendaPage() {
             >
               <div
                 className={`max-w-[80%] rounded-lg px-3 py-2 text-sm whitespace-pre-wrap ${m.role === "user"
-                    ? "bg-blue-600 text-white"
-                    : "bg-white border text-slate-900"
+                  ? "bg-blue-600 text-white"
+                  : "bg-white border text-slate-900"
                   }`}
               >
                 {m.content}

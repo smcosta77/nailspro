@@ -3,11 +3,14 @@ import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import fotoImg from "@/../public/foto1.png";
+import fotoImg1 from "@/../public/image1.jpg";
+import fotoImg2 from "@/../public/image2.jpg";
+import fotoImg3 from "@/../public/image3.jpg";
+import fotoImg4 from "@/../public/image4.jpg";
 
 type Clinica = {
   id: string;
   nome: string;
-  endereco: string;
   href: string;
   ativa?: boolean;
   imagem?: StaticImageData;
@@ -16,45 +19,42 @@ type Clinica = {
 const CLINICAS: Clinica[] = [
   {
     id: "123",
-    nome: "Clínica centro",
-    endereco: "Rua x, centro, Lisboa - PT",
+    nome: "Aplicação do alongamento",
     href: "/clinica/123",
     ativa: true,
-    imagem: fotoImg,
+    imagem: fotoImg1,
   },
   {
     id: "124",
-    nome: "Clínica zona norte",
-    endereco: "Av. y, Porto - PT",
+    nome: "Banho de gel",
     href: "/clinica/124",
     ativa: true,
-    imagem: fotoImg,
+    imagem: fotoImg2,
   },
   {
     id: "125",
-    nome: "Clínica zona sul",
-    endereco: "Rua z, Faro - PT",
+    nome: "Manicure simples",
+
     href: "/clinica/125",
     ativa: true,
-    imagem: fotoImg,
+    imagem: fotoImg3,
   },
   {
     id: "126",
-    nome: "Clínica zona sul",
-    endereco: "Rua z, Faro - PT",
+    nome: "Combo mãos e pés",
     href: "/clinica/126",
     ativa: true,
-    imagem: fotoImg,
+    imagem: fotoImg1,
   },
 ];
 
 export function Professionals() {
   return (
-    <section className="bg-white py-16">
+    <section className="bg-background py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* título mais compacto no mobile */}
         <h2 className="mb-8 text-center text-2xl font-bold sm:mb-12 sm:text-3xl">
-          Clínicas Disponíveis
+          Serviços Disponíveis
         </h2>
 
         {/* centraliza e limita largura dos cards no mobile */}
@@ -87,9 +87,9 @@ export function Professionals() {
                     <h3 className="text-base font-semibold sm:text-lg">
                       {c.nome}
                     </h3>
-                    <p className="text-xs text-gray-500 sm:text-sm">{c.endereco}</p>
+
                   </div>
-                  {c.ativa && <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />}
+                  {c.ativa && <span className="h-2.5 w-2.5 rounded-full bg-[#e8b6bc]" />}
                 </div>
 
                 <Link
@@ -97,9 +97,9 @@ export function Professionals() {
                   aria-label={`Agendar horário na ${c.nome}`}
                   className="
                     flex w-full items-center justify-center
-                    rounded-md bg-emerald-500 py-2
-                    text-sm font-medium text-white hover:bg-emerald-400
-                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60
+                    rounded-md bg-[#bb5b6a] py-2
+                    text-sm font-medium text-white hover:bg-[#a14f5a]
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bb5b6a]/60
                     md:text-base
                   "
                 >
