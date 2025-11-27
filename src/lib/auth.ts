@@ -5,9 +5,11 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "./prisma";
 import { UserRole } from "@prisma/client";
 
-if (!process.env.AUTH_GOOGLE_ID || !process.env.AUTH_GOOGLE_SECRET) {
-
-    throw new Error("Missing AUTH_GOOGLE_ID or AUTH_GOOGLE_SECRET");
+if (
+    process.env.NODE_ENV !== "production" &&
+    (!process.env.AUTH_GOOGLE_ID || !process.env.AUTH_GOOGLE_SECRET)
+) {
+    console.warn("Missing AUTH_GOOGLE_ID or AUTH_GOOGLE_SECRET (dev only)");
 }
 
 export const authConfig = {
