@@ -31,12 +31,13 @@ type Appointment = {
   email: string;
   phone: string;
   appointmentDate: string; // ISO
-  time: string;            // "HH:mm"
+  time: string; // "HH:mm"
   serviceId: string;
   professionalId: string;
   professional: Professional;
-  service: Service;                // serviço “principal”
-  services: AppointmentServiceRow[]; // todos os serviços do agendamento
+  service: Service; // serviço principal
+  services: AppointmentServiceRow[]; // todos os serviços
+  totalDuration: number; // duração total em minutos
 };
 
 type ServicesResponse = { items: Service[] };
@@ -52,11 +53,21 @@ const TIME_SLOTS = [
   "17:00", "17:30", "18:00", "18:30",
 ];
 
+const SLOT_MINUTES = 30;
+
 function formatDateInput(d: Date) {
   const year = d.getFullYear();
   const month = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+}
+
+function addMinutesToTime(time: string, minutesToAdd: number) {
+  const [h, m] = time.split(":").map(Number);
+  const total = h * 60 + m + minutesToAdd;
+  const hour = Math.floor(total / 60);
+  const min = total % 60;
+  return `${String(hour).padStart(2, "0")}:${String(min).padStart(2, "0")}`;
 }
 
 export default function AssistenteAgendaPage() {
@@ -67,10 +78,13 @@ export default function AssistenteAgendaPage() {
   const [professionals, setProfessionals] = useState<Professional[]>([]);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
 
-  // ✅ agora é um array (pode ter vários serviços selecionados)
+  // multi-select de serviços
   const [selectedServiceIds, setSelectedServiceIds] = useState<string[]>([]);
-  const [selectedProfessionalId, setSelectedProfessionalId] = useState<string | null>(null);
-  const [selectedDate, setSelectedDate] = useState<string>(() => formatDateInput(new Date()));
+  const [selectedProfessionalId, setSelectedProfessionalId] =
+    useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string>(() =>
+    formatDateInput(new Date()),
+  );
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
   const [clientName, setClientName] = useState<string>(
@@ -120,7 +134,7 @@ export default function AssistenteAgendaPage() {
 
         // defaults
         if (servicesJson.items?.length && selectedServiceIds.length === 0) {
-          setSelectedServiceIds([servicesJson.items[0].id]); // começa com 1 serviço marcado
+          setSelectedServiceIds([servicesJson.items[0].id]);
         }
         if (profsJson.items?.length && !selectedProfessionalId) {
           setSelectedProfessionalId(profsJson.items[0].id);
@@ -170,13 +184,39 @@ export default function AssistenteAgendaPage() {
     void loadAppointments(selectedDate);
   }, [selectedDate]);
 
-  // mapa de slots ocupados por profissional + horário
+  // ------------------ slots ocupados (considerando totalDuration) ------------------
   const busySlots = useMemo(() => {
     const set = new Set<string>();
+
     for (const appt of appointments) {
-      const key = `${appt.professionalId}|${appt.time}`;
-      set.add(key);
+      // duração total (fallbacks de segurança)
+      const duration =
+        appt.totalDuration && appt.totalDuration > 0
+          ? appt.totalDuration
+          : appt.services?.length
+            ? appt.services.reduce(
+              (sum, row) => sum + (row.service?.duration ?? 0),
+              0,
+            )
+            : appt.service?.duration ?? SLOT_MINUTES;
+
+      const [h, m] = appt.time.split(":").map(Number);
+      const startMinutes = h * 60 + m;
+      const slotsToBlock = Math.max(1, Math.ceil(duration / SLOT_MINUTES));
+
+      for (let i = 0; i < slotsToBlock; i++) {
+        const currentMinutes = startMinutes + i * SLOT_MINUTES;
+        const hour = Math.floor(currentMinutes / 60);
+        const minutes = currentMinutes % 60;
+
+        const slotLabel = `${String(hour).padStart(2, "0")}:${String(
+          minutes,
+        ).padStart(2, "0")}`;
+
+        set.add(`${appt.professionalId}|${slotLabel}`);
+      }
     }
+
     return set;
   }, [appointments]);
 
@@ -208,9 +248,19 @@ export default function AssistenteAgendaPage() {
     [selectedServices],
   );
 
+  const totalDuration = useMemo(
+    () => selectedServices.reduce((sum, s) => sum + (s.duration || 0), 0),
+    [selectedServices],
+  );
+
   const selectedProfessional = professionals.find(
     (p) => p.id === selectedProfessionalId,
   );
+
+  const estimatedEndTime =
+    selectedTime && totalDuration > 0
+      ? addMinutesToTime(selectedTime, totalDuration)
+      : null;
 
   // ------------------ submit do agendamento ------------------
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -243,8 +293,6 @@ export default function AssistenteAgendaPage() {
     setSubmitting(true);
 
     try {
-      const primaryServiceId = selectedServiceIds[0]; // usamos o primeiro como principal
-
       const res = await fetch("/api/appointments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -253,13 +301,11 @@ export default function AssistenteAgendaPage() {
           clientName: clientName.trim(),
           clientEmail: clientEmail ?? "",
           clientPhone: clientPhone.trim(),
-          serviceId: primaryServiceId,
           professionalId: selectedProfessionalId,
           date: selectedDate,
           time: selectedTime,
-          // se futuramente você quiser usar no backend:
-          // serviceIds: selectedServiceIds,
-          // totalPrice,
+          serviceId: selectedServiceIds[0],
+          serviceIds: selectedServiceIds,
         }),
       });
 
@@ -293,12 +339,15 @@ export default function AssistenteAgendaPage() {
         <header className="flex flex-col gap-1">
           <h1 className="text-2xl md:text-3xl font-semibold">Agendar horário</h1>
           <p className="text-sm md:text-base text-slate-600">
-            Escolha um ou mais serviços, selecione a profissional, o dia e um horário livre.
+            Escolha um ou mais serviços, selecione a profissional, o dia e um
+            horário livre.
           </p>
         </header>
 
         {loadingPage ? (
-          <p className="text-sm text-slate-500">Carregando serviços e profissionais…</p>
+          <p className="text-sm text-slate-500">
+            Carregando serviços e profissionais…
+          </p>
         ) : (
           <>
             {error && (
@@ -317,7 +366,8 @@ export default function AssistenteAgendaPage() {
             <section className="space-y-3">
               <h2 className="text-lg font-semibold">1. Escolha os serviços</h2>
               <p className="text-xs text-slate-500">
-                Pode selecionar mais de um (ex.: Combo mãos + pés + Blindagem).
+                Pode selecionar mais de um (ex.: Manicure simples + Pedicure
+                simples + Blindagem).
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {services.map((service) => {
@@ -363,7 +413,9 @@ export default function AssistenteAgendaPage() {
                   <select
                     className="w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#bb5b6a]"
                     value={selectedProfessionalId ?? ""}
-                    onChange={(e) => setSelectedProfessionalId(e.target.value || null)}
+                    onChange={(e) =>
+                      setSelectedProfessionalId(e.target.value || null)
+                    }
                   >
                     {professionals.map((p) => (
                       <option key={p.id} value={p.id}>
@@ -399,7 +451,9 @@ export default function AssistenteAgendaPage() {
               </h2>
 
               {loadingAppointments ? (
-                <p className="text-sm text-slate-500">Carregando horários deste dia…</p>
+                <p className="text-sm text-slate-500">
+                  Carregando horários deste dia…
+                </p>
               ) : (
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
                   {TIME_SLOTS.map((slot) => {
@@ -464,14 +518,25 @@ export default function AssistenteAgendaPage() {
                   selectedDate &&
                   selectedTime && (
                     <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-xs md:text-sm text-slate-700">
-                      <div className="font-semibold mb-1">Resumo do agendamento</div>
+                      <div className="font-semibold mb-1">
+                        Resumo do agendamento
+                      </div>
                       <p>
                         Serviços:{" "}
                         {selectedServices.map((s) => s.name).join(" + ")}
                       </p>
                       <p>Profissional: {selectedProfessional.name}</p>
                       <p>
-                        Data: {selectedDate} · Horário: {selectedTime}
+                        Data: {selectedDate} · Início: {selectedTime}
+                        {estimatedEndTime
+                          ? ` · Término aprox.: ${estimatedEndTime}`
+                          : null}
+                      </p>
+                      <p>
+                        Duração estimada: {totalDuration || 0} min
+                        {totalDuration >= 60
+                          ? ` (~${(totalDuration / 60).toFixed(1)} h)`
+                          : ""}
                       </p>
                       <p className="mt-1 font-semibold">
                         Total estimado: R$ {totalPrice},00

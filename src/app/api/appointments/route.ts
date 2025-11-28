@@ -32,12 +32,10 @@ export async function GET(req: Request) {
             },
             include: {
                 professional: true,
-                // se ainda quiser manter o “serviço principal”
                 service: true,
-                // 👇 lista de serviços do agendamento
                 services: {
                     include: {
-                        service: true, // vem { serviceId, appointmentId, service: { ... } }
+                        service: true,
                     },
                 },
             },
@@ -56,7 +54,7 @@ export async function GET(req: Request) {
     }
 }
 
-// POST continua como já estava (se ainda não mexemos para multi-serviço)
+// src/app/api/appointments/route.ts (POST)
 export async function POST(req: Request) {
     try {
         const body = (await req.json()) as Partial<CreateAppointmentDTO>;
@@ -65,39 +63,37 @@ export async function POST(req: Request) {
             !body.userId ||
             !body.clientName ||
             !body.clientPhone ||
-            !body.serviceId ||
+            !body.serviceId ||                        // ainda exigimos
             !body.professionalId ||
             !body.date ||
-            !body.time
+            !body.time ||
+            !body.serviceIds ||
+            !Array.isArray(body.serviceIds) ||
+            body.serviceIds.length === 0
         ) {
             return NextResponse.json(
                 { error: "Campos obrigatórios em falta para criar agendamento." },
-                { status: 400 }
+                { status: 400 },
             );
         }
 
         const appointment = await createAppointment(body as CreateAppointmentDTO);
 
         return NextResponse.json(
-            {
-                message: "Agendamento criado com sucesso.",
-                appointment,
-            },
-            { status: 201 }
+            { message: "Agendamento criado com sucesso.", appointment },
+            { status: 201 },
         );
     } catch (error: any) {
         console.error("[APPOINTMENTS_POST_ERROR]", error);
 
         if (error instanceof Error && error.message.includes("Já existe um agendamento")) {
-            return NextResponse.json(
-                { error: error.message },
-                { status: 409 }
-            );
+            return NextResponse.json({ error: error.message }, { status: 409 });
         }
 
         return NextResponse.json(
             { error: "Erro ao criar agendamento." },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }
+

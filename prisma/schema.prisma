@@ -14,12 +14,14 @@ model Appointment {
   email           String
   phone           String
   appointmentDate DateTime
-  time            String
+  time            String // "HH:mm"
+
+  totalDuration Int @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Serviço principal (pode usar para “serviço destaque”)
+  // Serviço principal
   serviceId String
   service   Service @relation(fields: [serviceId], references: [id])
 
@@ -27,11 +29,11 @@ model Appointment {
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
-  // Profissional
+  // Profissional responsável por este horário
   professionalId String
   professional   Professional @relation(fields: [professionalId], references: [id])
 
-  // 👇 NOVO – relação N:N com serviços
+  // ⬇⬇⬇ NOVO: relação N:N via tabela de junção
   services AppointmentService[]
 
   @@index([appointmentDate])
@@ -63,8 +65,11 @@ model Service {
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
-  appointement        Appointment[]
-  appointmentServices AppointmentService[] // 👈 novo lado da relação
+  // relação 1:N com Appointment (serviço principal)
+  appointement Appointment[]
+
+  // ⬇⬇⬇ NOVO: relação N:N via tabela de junção
+  appointmentServices AppointmentService[]
 }
 
 model Professional {
@@ -190,12 +195,11 @@ model Authenticator {
 }
 
 model AppointmentService {
-  id            String @id @default(cuid())
   appointmentId String
   serviceId     String
 
-  appointment Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  appointment Appointment @relation(fields: [appointmentId], references: [id])
   service     Service     @relation(fields: [serviceId], references: [id])
 
-  @@unique([appointmentId, serviceId])
+  @@id([appointmentId, serviceId])
 }
