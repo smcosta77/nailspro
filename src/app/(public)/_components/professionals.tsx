@@ -1,3 +1,4 @@
+// src/app/(public)/.../Professionals.tsx
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -57,8 +58,8 @@ export function Professionals() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  async function handleLogin() {
-    await handleRegister("google");
+  async function handleLogin(redirectTo: string = "/dashboard") {
+    await handleRegister("google", redirectTo);
   }
 
   const NavLinks = () => (
@@ -71,7 +72,7 @@ export function Professionals() {
           Meus agendamentos
         </Link>
       ) : (
-        <Button onClick={handleLogin}>
+        <Button onClick={() => handleLogin("/dashboard")}>
           <LogIn />
           Meus agendamentos
         </Button>
@@ -121,11 +122,13 @@ export function Professionals() {
 
                 <button
                   type="button"
-                  aria-label={`Agendar horário na ${c.nome}`}
-                  onClick={() => {
-
-                    router.push(c.href);
-
+                  aria-label={`Agendar horário em ${c.nome}`}
+                  onClick={async () => {
+                    if (status === "authenticated") {
+                      router.push(c.href); // já logado → vai direto para agenda
+                    } else if (status !== "loading") {
+                      await handleLogin(c.href); // não logado → faz login e volta para agenda
+                    }
                   }}
                   className="
                     flex w-full items-center justify-center
