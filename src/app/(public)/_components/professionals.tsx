@@ -26,28 +26,28 @@ const CLINICAS: Clinica[] = [
   {
     id: "123",
     nome: "Aplicação do alongamento",
-    href: "/dashboard/assistente-agenda",
+    href: "/agendaCliente",
     ativa: true,
     imagem: fotoImg2,
   },
   {
     id: "124",
     nome: "Banho de gel",
-    href: "/dashboard/assistente-agenda",
+    href: "/agendaCliente",
     ativa: true,
     imagem: fotoImg5,
   },
   {
     id: "125",
     nome: "Manicure simples",
-    href: "/dashboard/assistente-agenda",
+    href: "/agendaCliente",
     ativa: true,
     imagem: imageSimples,
   },
   {
     id: "126",
     nome: "Combo mãos e pés",
-    href: "/dashboard>/assistente-agenda",
+    href: "/agendaCliente",
     ativa: true,
     imagem: imageCombo,
   },
@@ -123,11 +123,9 @@ export function Professionals() {
                   type="button"
                   aria-label={`Agendar horário na ${c.nome}`}
                   onClick={() => {
-                    if (status === "authenticated") {
-                      router.push(c.href);
-                    } else if (status !== "loading") {
-                      void handleLogin();
-                    }
+
+                    router.push(c.href);
+
                   }}
                   className="
                     flex w-full items-center justify-center

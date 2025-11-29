@@ -1,9 +1,3 @@
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import doctorimage from "@/../public/doctor-hero.png";
-import fotoImg4 from "@/../public/image4.jpg";
-import imageTop from "@/../public/imagetop.jpeg"
-
 
 export function Hero() {
   return (
@@ -18,18 +12,8 @@ export function Hero() {
             <p className="text-base md:text-lg text-gray-500">
               Cuidando das suas unhas com carinho e técnica. Um momento de autocuidado para mulheres e homens.
             </p>
-
-            <Button className="bg-[#bb5b6a] hover:bg-[#a14f5a] w-fit px-6 font-semibold">
-              Encontre nosso espaço
-            </Button>
           </article>
-
-
-
-
         </main>
-
-
       </div>
     </section>
   );

@@ -1,4 +1,4 @@
-// src/app/(panel)/dashboard/agenda/page.tsx
+// src/app/(panel)/dashboard/agendaAdmin/page.tsx
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
